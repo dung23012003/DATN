@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DongY.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250419150731_AddCategoryTable")]
-    partial class AddCategoryTable
+    [Migration("20250509191716_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -135,7 +135,8 @@ namespace DongY.Migrations
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -332,12 +333,20 @@ namespace DongY.Migrations
             modelBuilder.Entity("DongY.Models.ProductSymptomModel", b =>
                 {
                     b.Property<int>("ProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
+
+                    b.Property<int>("ProductId1")
                         .HasColumnType("int");
 
                     b.Property<int>("SymptomId")
                         .HasColumnType("int");
 
-                    b.HasKey("ProductId", "SymptomId");
+                    b.HasKey("ProductId");
+
+                    b.HasIndex("ProductId1");
 
                     b.HasIndex("SymptomId");
 
@@ -414,7 +423,7 @@ namespace DongY.Migrations
 
                     b.HasKey("StatusId");
 
-                    b.ToTable("OrderStatuses", (string)null);
+                    b.ToTable("Statuses");
                 });
 
             modelBuilder.Entity("DongY.Models.SymptomModel", b =>
@@ -440,12 +449,20 @@ namespace DongY.Migrations
             modelBuilder.Entity("DongY.Models.WishlistModel", b =>
                 {
                     b.Property<int>("CustomerId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CustomerId"));
+
+                    b.Property<int>("CustomerId1")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.HasKey("CustomerId", "ProductId");
+                    b.HasKey("CustomerId");
+
+                    b.HasIndex("CustomerId1");
 
                     b.HasIndex("ProductId");
 
@@ -558,7 +575,7 @@ namespace DongY.Migrations
                     b.HasOne("DongY.Models.CategoryModel", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -568,7 +585,7 @@ namespace DongY.Migrations
                 {
                     b.HasOne("DongY.Models.ProductModel", "Product")
                         .WithMany("ProductSymptoms")
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ProductId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -606,7 +623,7 @@ namespace DongY.Migrations
                 {
                     b.HasOne("DongY.Models.CustomerModel", "Customer")
                         .WithMany("Wishlists")
-                        .HasForeignKey("CustomerId")
+                        .HasForeignKey("CustomerId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

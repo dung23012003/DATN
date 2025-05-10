@@ -19,13 +19,13 @@ namespace DongY.Data
             var builder = new DbContextOptionsBuilder<AppDbContext>();
 
             // 3. Lấy connection string từ cấu hình
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            var connectionString = configuration.GetConnectionString("ConnectedDb"); // Đã sửa thành "ConnectedDb"
 
             // 4. Kiểm tra và xử lý nếu connection string null
             if (string.IsNullOrEmpty(connectionString))
             {
                 throw new InvalidOperationException(
-                    "Không tìm thấy connection string 'DefaultConnection' trong appsettings.json");
+                    "Không tìm thấy connection string 'ConnectedDb' trong appsettings.json");
             }
 
             // 5. Cấu hình và trả về DbContext
